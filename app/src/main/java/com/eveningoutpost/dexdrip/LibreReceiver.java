@@ -151,6 +151,11 @@ public class LibreReceiver extends BroadcastReceiver {
                                 }
                                 currentRawValue.save();
                                 clearNFCsensorAge();
+
+                                final Intent diasyncIntent = currentRawValue.toDiasyncIntent("master");
+                                Log.d(TAG, "Sending broadcast to Diasync");
+                                xdrip.getAppContext().sendBroadcast(diasyncIntent);
+
                                 break;
 
                             default:
