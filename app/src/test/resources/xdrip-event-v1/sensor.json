@@ -1,0 +1,1 @@
+{"protocolVersion":1,"eventId":"SENSOR:550e8400-e29b-41d4-a716-446655440000","eventType":"SENSOR","occurredAtEpochMillis":1789027200000,"sensor":{"rawValue":123.0,"sensorId":"libre-sensor-id","calibration":{"slope":1.1,"intercept":-2.0}}}

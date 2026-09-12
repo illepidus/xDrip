@@ -1321,7 +1321,6 @@ public class BgReading extends Model implements ShareUploadableBg {
                 bgReading.calculated_value_slope = 0;
                 bgReading.hide_slope = false;
                 bgReading.appendSourceInfo("Libre2 Native");
-                bgReading.find_slope();
 
                 bgReading.save();
                 bgReading.perform_calculations();
@@ -1348,8 +1347,8 @@ public class BgReading extends Model implements ShareUploadableBg {
 
                 BgReading.updateCalculatedValueToWithinMinMax(bgReading);
 
-                bgReading.find_slope();
                 bgReading.save();
+                bgReading.find_slope();
 
                 bgReading.postProcess(false);
 

@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.text.format.DateFormat;
 
+import com.eveningoutpost.dexdrip.diasync.DiasyncSensorExporter;
 import com.eveningoutpost.dexdrip.models.BgReading;
+import com.eveningoutpost.dexdrip.models.Calibration;
 import com.eveningoutpost.dexdrip.models.GlucoseData;
 import com.eveningoutpost.dexdrip.models.JoH;
 import com.eveningoutpost.dexdrip.models.Libre2RawValue;
@@ -146,9 +148,13 @@ public class LibreReceiver extends BroadcastReceiver {
                                         dataFetchInterval = smoothing_minutes;
                                     List<Libre2RawValue> smoothingValues = Libre2RawValue.weightedAverageInterval(dataFetchInterval);
                                     smoothingValues.add(currentRawValue);
-                                    processValues(currentRawValue, smoothingValues, smoothing_minutes, context);
+                                    processValues(currentRawValue, smoothingValues, smoothing_minutes);
                                 }
                                 currentRawValue.save();
+                                DiasyncSensorExporter.export(
+                                        context,
+                                        currentRawValue,
+                                        Calibration.lastValid());
                                 clearNFCsensorAge();
                                 break;
 
@@ -200,7 +206,7 @@ public class LibreReceiver extends BroadcastReceiver {
         return rawValue;
     }
 
-    private static void processValues(Libre2RawValue currentValue, List<Libre2RawValue> smoothingValues, long smoothing_minutes, Context context) {
+    private static void processValues(Libre2RawValue currentValue, List<Libre2RawValue> smoothingValues, long smoothing_minutes) {
         if (Sensor.currentSensor() == null) {
             Sensor.create(currentValue.timestamp, currentValue.serial);
 
