@@ -13,7 +13,10 @@ android {
         minSdkVersion 21
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 23
-        versionCode 1
+        versionCode providers.environmentVariable("DIASYNC_VERSION_CODE")
+                .map { Integer.parseInt(it) }
+                .orElse(1)
+                .get()
         versionName generateVersionName()
         buildConfigField "int", "buildVersion", generateVersionNumberString()
         buildConfigField "String", "buildUUID", generateRandomUUID()
@@ -102,6 +105,8 @@ android {
         buildConfig true
     }
 }
+
+apply from: rootProject.file('gradle/release-signing.gradle')
 
 allprojects {
     repositories {

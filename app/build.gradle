@@ -95,7 +95,10 @@ android {
         targetSdkVersion 26
         // change versionCode only when downgrade should be prevented
         // eg, when data structures are incompatible
-        versionCode 1603091400
+        versionCode providers.environmentVariable("DIASYNC_VERSION_CODE")
+                .map { Integer.parseInt(it) }
+                .orElse(1603091400)
+                .get()
         versionName generateVersionName()
         buildConfigField "int", "buildVersion", generateVersionNumberString()
         buildConfigField "String", "buildUUID", generateRandomUUID()
@@ -246,6 +249,8 @@ android {
     }
 
 }
+
+apply from: rootProject.file('gradle/release-signing.gradle')
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

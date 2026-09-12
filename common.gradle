@@ -26,6 +26,11 @@ ext.generateRandomUUID = { ->
 }
 
 ext.generateVersionName = { ->
+    String releaseVersionName = System.getenv('DIASYNC_VERSION_NAME')
+    if (releaseVersionName != null && !releaseVersionName.isBlank()) {
+        return releaseVersionName
+    }
+
     StringBuilder stringBuilder = new StringBuilder()
     try {
         def stdout = new ByteArrayOutputStream()
