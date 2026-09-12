@@ -18,6 +18,7 @@ import com.activeandroid.query.Select;
 import com.activeandroid.util.SQLiteUtils;
 import com.eveningoutpost.dexdrip.GcmActivity;
 import com.eveningoutpost.dexdrip.Home;
+import com.eveningoutpost.dexdrip.diasync.DiasyncCarbsExporter;
 import com.eveningoutpost.dexdrip.alert.SensorExpiry;
 import com.eveningoutpost.dexdrip.g5model.DexSessionKeeper;
 import com.eveningoutpost.dexdrip.models.UserError.Log;
@@ -298,6 +299,7 @@ public class Treatments extends Model {
         treatment.created_at = DateUtil.toISOString(timestamp);
         treatment.uuid = suggested_uuid != null ? suggested_uuid : UUID.randomUUID().toString();
         treatment.save();
+        DiasyncCarbsExporter.export(xdrip.getAppContext(), treatment);
         // GcmActivity.pushTreatmentAsync(Treatment);
         //  NSClientChat.pushTreatmentAsync(Treatment);
 
@@ -1438,6 +1440,4 @@ public class Treatments extends Model {
         return notes != null && notes.startsWith("Priming");
     }
 }
-
-
 

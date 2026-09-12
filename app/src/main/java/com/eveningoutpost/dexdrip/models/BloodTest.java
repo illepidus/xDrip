@@ -10,8 +10,9 @@ import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.util.SQLiteUtils;
 import com.eveningoutpost.dexdrip.AddCalibration;
-import com.eveningoutpost.dexdrip.glucosemeter.GlucoseReadingRx;
 import com.eveningoutpost.dexdrip.Home;
+import com.eveningoutpost.dexdrip.diasync.DiasyncManualGlucoseExporter;
+import com.eveningoutpost.dexdrip.glucosemeter.GlucoseReadingRx;
 import com.eveningoutpost.dexdrip.services.SyncService;
 import com.eveningoutpost.dexdrip.utilitymodels.BgGraphBuilder;
 import com.eveningoutpost.dexdrip.utilitymodels.Constants;
@@ -161,6 +162,7 @@ public class BloodTest extends Model {
             bt.state = STATE_VALID;
             bt.source = source;
             bt.saveit();
+            DiasyncManualGlucoseExporter.export(xdrip.getAppContext(), bt);
             if (UploaderQueue.newEntry("insert", bt) != null) {
                 SyncService.startSyncService(3000); // sync in 3 seconds
             }
@@ -574,4 +576,3 @@ public class BloodTest extends Model {
         patched = true;
     }
 }
-

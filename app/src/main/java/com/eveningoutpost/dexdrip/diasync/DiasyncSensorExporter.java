@@ -1,8 +1,6 @@
 package com.eveningoutpost.dexdrip.diasync;
 
 import android.content.Context;
-import android.content.Intent;
-
 import com.eveningoutpost.dexdrip.models.Calibration;
 import com.eveningoutpost.dexdrip.models.Libre2RawValue;
 import com.eveningoutpost.dexdrip.models.UserError;
@@ -12,13 +10,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public final class DiasyncSensorExporter {
-    public static final String ACTION_XDRIP_EVENT = "ru.krotarnya.diasync2.action.XDRIP_EVENT";
-    public static final String DIASYNC_PACKAGE = "ru.krotarnya.diasync2";
-    public static final String EXTRA_PAYLOAD = "payload";
-
     private static final String TAG = DiasyncSensorExporter.class.getSimpleName();
     private static final char[] HEX = "0123456789abcdef".toCharArray();
-    private static final DiasyncSensorEventEncoder ENCODER = new DiasyncSensorEventEncoder();
+    public static final String ACTION_XDRIP_EVENT = DiasyncEventTransport.ACTION_XDRIP_EVENT;
+    public static final String DIASYNC_PACKAGE = DiasyncEventTransport.DIASYNC_PACKAGE;
+    public static final String EXTRA_PAYLOAD = DiasyncEventTransport.EXTRA_PAYLOAD;
 
     private DiasyncSensorExporter() {
     }
@@ -26,10 +22,7 @@ public final class DiasyncSensorExporter {
     public static void export(Context context, Libre2RawValue rawValue, Calibration calibration) {
         try {
             DiasyncSensorEvent event = eventFrom(rawValue, calibration);
-            Intent intent = new Intent(ACTION_XDRIP_EVENT)
-                    .setPackage(DIASYNC_PACKAGE)
-                    .putExtra(EXTRA_PAYLOAD, ENCODER.encode(event));
-            context.sendBroadcast(intent);
+            DiasyncEventTransport.send(context, event);
         } catch (IllegalArgumentException exception) {
             UserError.Log.w(TAG, "Diasync sensor event was not exported: invalid reading");
         }
